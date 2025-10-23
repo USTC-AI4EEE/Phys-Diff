@@ -1,0 +1,152 @@
+# PhysDiff main configuration
+conda_env: "Phys-Diff"
+
+# Data configuration
+data:
+  ibtracs_path: "/storage/yuxiaoning/yuxiaoning/ibtracs.ALL.list.v04r00.csv"
+  era5_paths:
+    - "/storage/yuxiaoning/yuxiaoning/ERA5"
+  tc_cropped_path: "/storage/yuxiaoning/yuxiaoning/TC_ERA5_crop"
+
+  # Data parameters
+  tc_radius: 10.0
+  resolution: 0.25
+  era5_shape: [69, 721, 1440]
+  tc_shape: [69, 80, 80]
+  time_resolution: 6
+
+  # Train/validation/test years
+  train_years: [1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017]
+  val_years: [2018]
+  test_years: [2019, 2020, 2021]
+
+  # Sequence parameters
+  history_steps: 4  # Historical time steps
+  future_steps: 4   # Prediction time steps
+
+# Model configuration
+model:
+  d_model: 128
+  d_embedding: 64
+
+  # Ablation study configuration
+  ablation:
+    use_fengwu: false     # Set false for w/o FengWu ablation
+
+  # Encoder configuration
+  encoder:
+    num_layers: 3
+    num_heads: 4
+    d_ff: 256
+    dropout: 0.1
+
+  # Decoder configuration
+  decoder:
+    num_layers: 3
+    num_heads: 4
+    d_ff: 256
+    dropout: 0.1
+
+  # TC trajectory encoder
+  tc_encoder:
+    gru_hidden: 32
+    gru_layers: 2
+    coord_mlp_dims: [2, 16, 32]
+    mlsp_mlp_dims: [1, 16, 32]
+    msw_mlp_dims: [1, 16, 32]
+
+  # Environment encoder (Swin Transformer)
+  env_encoder:
+    patch_size: 4
+    window_size: 8
+    embed_dim: 64
+    depths: [2, 2]
+    num_heads: [2, 4]
+
+  # Physics-Inspired Gated Attention module
+  piga:
+    d_sub: 16
+    gate_mlp_dims: [64, 16, 1]
+
+  # DDPM parameters
+  ddpm:
+    num_timesteps: 1000
+    beta_schedule: "cosine"
+    beta_start: 0.0001
+    beta_end: 0.02
+
+  # FengWu meteorological forecast model configuration
+  # Important: Must use precomputed data, runtime inference not supported
+  fengwu:
+    use_precomputed: true   # Force use of precomputed data
+    precomputed_path: "/storage/yuxiaoning/yuxiaoning/TC_ERA5_crop"  # Precomputed FengWu data path (same as tc_cropped_path)
+
+# Training configuration
+training:
+  batch_size: 64
+  learning_rate: 0.0001
+  num_epochs: 30
+  warmup_steps: 500
+
+  # Loss weights - using uncertainty adaptive weight learning
+  loss_config:
+
+    # Uncertainty adaptive weight learning configuration
+    use_uncertainty_weighting: true
+    uncertainty_weights:
+      # Diffusion loss weight parameter (log_sigma^2 initial value)
+      diffusion_log_var: 1.0
+      # Reconstruction loss weight parameters
+      coord_log_var: 0.0
+      msw_log_var: 0.5
+      mlsp_log_var: 0.5
+
+    # Reconstruction loss configuration
+    reconstruction_loss:
+      enabled: true
+      coord_loss_type: "euclidean"  # euclidean, huber, smooth_l1
+      intensity_loss_type: "mae"    # mse, mae, huber
+
+  # Optimizer
+  optimizer: "AdamW"
+  weight_decay: 0.0001
+  gradient_clip: 0.1
+
+  # Learning rate scheduling
+  scheduler: "cosine"
+  min_lr: 0.00001
+
+
+  # Early stopping strategy
+  early_stopping:
+    patience: 2
+    min_delta: 0.001
+    monitor: "val_loss"
+    restore_best_weights: true
+
+  # Checkpoint saving
+  save_every: 10
+  checkpoint_dir: "./checkpoints"
+
+# Evaluation configuration
+evaluation:
+  metrics: ["mae", "rmse", "mape"]
+  save_predictions: true
+  visualization: true
+
+# Hardware configuration
+hardware:
+  device: "cuda"
+  gpu_id: 4  # GPU device ID, set -1 for CPU
+  num_workers: 4  # Reduced from 8 to 4 to reduce context switching overhead
+  pin_memory: true
+  mixed_precision: false  # Disabled to avoid NaN
+  prefetch_factor: 2  # Reduced from 4 to 2 to reduce memory usage
+  persistent_workers: true
+
+# Logging configuration
+logging:
+  level: "INFO"
+  log_dir: "./logs"
+  tensorboard: true
+  wandb: false
