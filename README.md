@@ -4,6 +4,8 @@
 
 Lei Liu, Xiaoning Yu, Kang Chen, Jiahui Huang, Tengyuan Liu, Hongwei Zhao, Bin Li.
 
+Website: https://arxiv.org/abs/2603.00521 .
+
 ## 1. Abstract
 
 Tropical Cyclone (TC) forecasting is crucial for disaster warning and emergency response. Recently, Deep Learning (DL) methods have been widely explored to address computational challenges in this domain. However, existing methods often model cyclone attributes independently, ignoring their physical relationships. This leads to predictions lacking physical consistency, particularly in long-term forecasts. To address this, we propose Phys-Diff, a physics-inspired latent diffusion model for TC forecasting. Specifically, Phys-Diff firstly proposes to disentangle the latent features into three parts for different TC attributes (i.e., trajectory, pressure, and wind speed). Then, Phys-Diff introduces a cross-task attention mechanism, enabling features from different attributes to attend and capture their inherent relationships. By incorporating these dependencies, Phys-Diff effectively enhances the physical consistency of learned features. Moreover, Phys-Diff integrates multimodal data—including historical cyclone attributes, ERA5 reanalysis data, and FengWu forecast fields—into the Transformer encoder-decoder architecture, thus generating the features with comprehensive environmental information to further improve the effectiveness for TC forecasting. Experiments show that Phys-Diff outperforms existing methods, especially in long-term forecasting, reducing the 120-hour wind speed forecast error by up to 65.7% against state-of-the-art models on the global dataset.
@@ -49,7 +51,6 @@ FengWu Model: A meteorological forecasting model open-sourced by OpenEarthLab. T
 BTrACS Dataset (Best Track): The International Best Track Archive for Climate Stewardship (IBTrACS) provided by the National Centers for Environmental Information (NCEI). It can be accessed through [this link](https://www.ncei.noaa.gov/products/international-best-track-archive).
 
 The preprocessing tool for generating FengWu model forecast fields is located in `./utils/precompute_fengwu_forecasts.py`. Before running this script, approximately 17.16 TB of ERA5 data should be prepared. Model parameters can be adjusted by modifying the corresponding `.yaml` configuration files, and default settings are provided in the code for reference.
-
 
 ## 4. Usage
 
@@ -148,15 +149,15 @@ We appreciate the following open-sourced repositories for their valuable code ba
 - MMSTN (2022): https://github.com/Zjut-MultimediaPlus/MMSTN
 - MGTCF (2023): https://github.com/Zjut-MultimediaPlus/MGTCF
 - TC-Diffuser (2025): https://github.com/Zjut-MultimediaPlus/TC-Diffuser
-
-
+  
+  
 
 ## 6. Citation
 
 If you find our work useful in your research, please consider citing:
 
 ```latex
-
+Liu L, Yu X, Chen K, et al. Phys-Diff: A Physics-Inspired Latent Diffusion Model for Tropical Cyclone Forecasting[J]. arXiv preprint arXiv:2603.00521, 2026.
 ```
 
 If you have any problems, contact me via liulei13@ustc.edu.cn.
