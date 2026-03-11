@@ -4,6 +4,8 @@
 
 Lei Liu, Xiaoning Yu, Kang Chen, Jiahui Huang, Tengyuan Liu, Hongwei Zhao, Bin Li.
 
+Our paper has been accepted by ICASSP 2026.
+
 Website: https://arxiv.org/abs/2603.00521 .
 
 ## 1. Abstract
