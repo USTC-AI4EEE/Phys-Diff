@@ -159,7 +159,14 @@ We appreciate the following open-sourced repositories for their valuable code ba
 If you find our work useful in your research, please consider citing:
 
 ```latex
-Liu L, Yu X, Chen K, et al. Phys-Diff: A Physics-Inspired Latent Diffusion Model for Tropical Cyclone Forecasting[J]. arXiv preprint arXiv:2603.00521, 2026.
+@inproceedings{liu2026phys,
+  title={Phys-Diff: A physics-inspired latent diffusion model for tropical cyclone forecasting},
+  author={Liu, Lei and Yu, Xiaoning and Chen, Kang and Huang, Jiahui and Liu, Tengyuan and Zhao, Hongwei and Li, Bin},
+  booktitle={ICASSP 2026-2026 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={3536--3540},
+  year={2026},
+  organization={IEEE}
+}
 ```
 
 If you have any problems, contact me via liulei13@ustc.edu.cn.
