@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "physdiff"
+version = "2.0.0"
+description = "Phys-Diff: A Physics-Inspired Latent Diffusion Model for Tropical Cyclone Forecasting (ICASSP 2026)"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Lei Liu" }, { name = "Xiaoning Yu" }, { name = "Kang Chen" }, { name = "Jiahui Huang" },
+           { name = "Tengyuan Liu" }, { name = "Hongwei Zhao" }, { name = "Bin Li" }]
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.24", "torch>=2.5"]
+
+[project.urls]
+Repository = "https://github.com/USTC-AI4EEE/Phys-Diff"
+
+[tool.setuptools.packages.find]
+include = ["physdiff*"]
