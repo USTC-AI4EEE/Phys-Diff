@@ -49,6 +49,12 @@ Released models (`configs/`, `checkpoints/`, and the 50-member test ensembles in
 
 ## 4. Usage
 
+- build `PREP` / `FINE` from IBTrACS and (69, 80, 80) ERA5 crops (see [docs/DATA.md](docs/DATA.md#building-prep-and-fine)):
+
+```bash
+python tools/prepare.py --ibtracs ibtracs.ALL.list.v04r00.csv --crops TC_ERA5 --splits test --data PREP --fine-root FINE
+```
+
 - inference with a released checkpoint and evaluation:
 
 ```bash

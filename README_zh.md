@@ -49,6 +49,12 @@ IBTrACS 数据集（最佳路径）：美国国家环境信息中心（NCEI）�
 
 ## 4. 使用方法
 
+- 由 IBTrACS 和 (69, 80, 80) ERA5 裁剪场生成 `PREP` / `FINE`（见 [docs/DATA.md](docs/DATA.md#building-prep-and-fine)）：
+
+```bash
+python tools/prepare.py --ibtracs ibtracs.ALL.list.v04r00.csv --crops TC_ERA5 --splits test --data PREP --fine-root FINE
+```
+
 - 使用发布的 checkpoint 推理并评估：
 
 ```bash
