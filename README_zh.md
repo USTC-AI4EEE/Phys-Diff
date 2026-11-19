@@ -53,6 +53,8 @@ IBTrACS 数据集（最佳路径）：美国国家环境信息中心（NCEI）�
 
 ```bash
 python tools/prepare.py --ibtracs ibtracs.ALL.list.v04r00.csv --crops TC_ERA5 --splits test --data PREP --fine-root FINE
+# 仅 main 模型：FengWu 未来步与 GEOM
+python tools/prepare_fengwu.py --model fengwu_v1.onnx --era5 ERA5 --ibtracs ibtracs.ALL.list.v04r00.csv --splits test --data PREP --fine-root FINE --geometry GEOM
 ```
 
 - 使用发布的 checkpoint 推理并评估：

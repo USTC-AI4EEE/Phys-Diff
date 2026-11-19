@@ -22,7 +22,6 @@ def parse_args():
     p.add_argument('--config', type=Path, default=ROOT / 'configs' / 'wo_fengwu.json')
     p.add_argument('--ibtracs', type=Path, required=True)
     p.add_argument('--crops', type=Path, required=True, help='root of <year>/<sid>/<YYYY-mm-dd HH_MM_SS>/ERA5_data.npy')
-    p.add_argument('--future', type=Path, help='(N, 4, 69, 80, 80) FengWu crops for steps 4-7 (main model only)')
     p.add_argument('--windows', type=Path, default=ROOT / 'windows')
     p.add_argument('--splits', default='test')
     p.add_argument('--data', type=Path, required=True)
@@ -97,13 +96,11 @@ def build_split(split, args, config, mean, std):
     weather = np.lib.format.open_memmap(out / 'weather.npy', 'w+', np.float32, (n, STEPS, 2, 69, 10, 10))
     extrema = np.lib.format.open_memmap(out / 'extrema.npy', 'w+', np.float32, (n, STEPS, 69, 2))
     fine = np.lib.format.open_memmap(fine_out / 'fine_core.npy', 'w+', np.float32, (n, STEPS, 11, 40, 40))
-    future = np.load(args.future, mmap_mode='r') if args.future else None  # else steps 4-7 stay zero (wo_fengwu)
+    # steps 4-7 stay zero here; tools/prepare_fengwu.py fills them for the main model
 
     def window(i):
         w = windows[i]
         fields = [np.load(crop_path(args.crops, w['sid'], t)) for t in step_times(w['t0'])[:HISTORY]]
-        if future is not None:
-            fields += list(np.asarray(future[i]))
         return i, reduce(np.stack(fields), mean, std)
 
     with ThreadPoolExecutor(args.workers) as pool:
@@ -142,7 +139,7 @@ def main():
         dict(phase='complete', stats=dict(env_channel_stats=stats), splits=sizes)), encoding='utf-8')
     if args.check:
         for s in splits:
-            check(s, args, sizes[s], STEPS if args.future else HISTORY)
+            check(s, args, sizes[s], HISTORY)
 
 
 if __name__ == '__main__':

@@ -78,7 +78,22 @@ observed step). `tools/prepare.py` builds `PREP` and `FINE` from it:
 python tools/prepare.py --ibtracs ibtracs.ALL.list.v04r00.csv --crops TC_ERA5 --splits test --data PREP --fine-root FINE
 ```
 
-Steps 4–7 (FengWu) are written as zeros unless `--future` is given; the `wo_fengwu` model never reads them.
+Steps 4–7 are left as zeros (the `wo_fengwu` model never reads them). For the main model, `tools/prepare_fengwu.py`
+then fills them and writes `GEOM`:
+
+1. FengWu v1 (`fengwu_v1.onnx` with `data_mean.npy`, `data_std.npy`, from [FengWu](https://github.com/OpenEarthLab/FengWu))
+   is initialised from global ERA5 at t0−6 h and t0 and rolled out to t0+24 h. ERA5 files are `<era5>/<YYYYmmdd_HH>.npy`,
+   (69, 721, 1440), 90°N→90°S, 0°E→359.75°E, in the official FengWu channel order (same as below).
+2. At each lead the vortex is the 850 hPa relative-vorticity maximum within ±5° of the previous centre (IBTrACS at t0
+   for the first lead); if it is below 5×10⁻⁵ s⁻¹ the previous centre is kept and `vortex_detected` is false.
+3. An 80×80 crop around that centre is reduced as in step 3 above.
+
+```bash
+python tools/prepare_fengwu.py --model fengwu_v1.onnx --era5 ERA5 --ibtracs ibtracs.ALL.list.v04r00.csv \
+    --splits test --data PREP --fine-root FINE --geometry GEOM
+```
+
+This needs `onnxruntime-gpu` and takes ~7 s per initialisation on one GPU (test: 3,649 initialisations).
 
 ## `manifest.json`
 
