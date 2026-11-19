@@ -49,6 +49,14 @@ Released models (`configs/`, `checkpoints/`, and the 50-member test ensembles in
 
 ## 4. Usage
 
+- build `PREP` / `FINE` from IBTrACS and (69, 80, 80) ERA5 crops (see [docs/DATA.md](docs/DATA.md#building-prep-and-fine)):
+
+```bash
+python tools/prepare.py --ibtracs ibtracs.ALL.list.v04r00.csv --crops TC_ERA5 --splits test --data PREP --fine-root FINE
+# main model only: FengWu steps and GEOM
+python tools/prepare_fengwu.py --model fengwu_v1.onnx --era5 ERA5 --ibtracs ibtracs.ALL.list.v04r00.csv --splits test --data PREP --fine-root FINE --geometry GEOM
+```
+
 - inference with a released checkpoint and evaluation:
 
 ```bash
